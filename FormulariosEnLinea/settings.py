@@ -80,7 +80,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'formularios_en_linea',
         'USER': 'computos',
-        'PASSWORD': 'D1g3st0_vn',
+        'PASSWORD': 'Mvil0858*',
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -126,6 +126,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'AppFormularios/static'),
 ]
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
