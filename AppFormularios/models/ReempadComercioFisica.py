@@ -2,8 +2,6 @@ import os
 from django.db import models
 from django.core.validators import FileExtensionValidator
 from django.utils import timezone
-from django.db.models.signals import post_migrate
-from django.dispatch import receiver
 from reportlab.pdfgen import canvas
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
@@ -12,6 +10,7 @@ from django.core.files.storage import default_storage
 from reportlab.lib.pagesizes import A4
 from PIL import Image as PilImage
 from PyPDF2 import PdfReader, PdfWriter
+from .models import Estado
 import io
 
 # Create your models here.
@@ -22,19 +21,6 @@ def upload_to_inscripcionAFIP(instance, filename):
 def upload_to_reempadronamiento_fisica(instance, filename):
     base, extension = os.path.splitext(filename)
     return 'ReempadronamientoFisica/{0}{1}-{2}-{3}-Final{4}'.format(instance.apellido, instance.nombre, instance.nombreFantasia, instance.cuit, extension)
-
-class Estado(models.Model):
-    nombre = models.CharField(max_length=50)
-
-    def __str__(self):
-        return self.nombre
-
-@receiver(post_migrate)
-def add_initial_data(sender, **kwargs):
-    Estado.objects.get_or_create(nombre='Pendiente')
-    Estado.objects.get_or_create(nombre='Cargado')
-    Estado.objects.get_or_create(nombre='Rechazado')
-    Estado.objects.get_or_create(nombre='Eliminado')
 
 class ReempadComercioFisica(models.Model):
     fecha = models.DateField(default=timezone.now, blank=True, null=True)
