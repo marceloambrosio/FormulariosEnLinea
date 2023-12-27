@@ -33,10 +33,13 @@ class Estado(models.Model):
 def add_initial_data(sender, **kwargs):
     Estado.objects.get_or_create(nombre='Pendiente')
     Estado.objects.get_or_create(nombre='Cargado')
+    Estado.objects.get_or_create(nombre='Rechazado')
+    Estado.objects.get_or_create(nombre='Eliminado')
 
 class ReempadComercioFisica(models.Model):
     fecha = models.DateField(default=timezone.now, blank=True, null=True)
     estado = models.ForeignKey(Estado, on_delete=models.PROTECT, blank=True, null=True)
+    observaciones = models.TextField(blank=True, null=True)
     nombre = models.CharField(max_length=50)
     apellido = models.CharField(max_length=50)
     nombreFantasia = models.CharField(max_length=50)
@@ -66,6 +69,9 @@ class ReempadComercioFisica(models.Model):
         return self.apellido + ", " + self.nombre + " - " + self.nombreFantasia + " - " + str(self.cuit)
     
     def save(self, *args, **kwargs):
+        # Guarda el objeto, lo que debería almacenar el archivo inscripcionAFIP
+        super().save(*args, **kwargs)
+
         # Si el objeto ya tiene un PDF, lo elimina
         if self.pdf and os.path.isfile(self.pdf.path):
             default_storage.delete(self.pdf.path)
@@ -303,12 +309,21 @@ class ReempadComercioFisica(models.Model):
         with open('output.pdf', 'wb') as f:
             output.write(f)
 
+        # Asegúrate de que el archivo inscripcionAFIP exista y se pueda leer
+        if os.path.isfile(self.inscripcionAFIP.path):
+            # Añade el archivo inscripcionAFIP como una hoja adicional
+            with open(self.inscripcionAFIP.path, 'rb') as f:
+                output.add_page(PdfReader(f).pages[0])
+
         # Lee el contenido del nuevo archivo PDF
         with open('output.pdf', 'rb') as f:
             new_pdf = f.read()
 
         # Guarda el PDF en el campo 'pdf' del modelo.
         self.pdf.save('output.pdf', ContentFile(new_pdf), save=False)
+
+        # Borra el archivo 'output.pdf'
+        os.remove('output.pdf')
 
         # Actualiza el estado
         estado = Estado.objects.get(nombre='Pendiente')
