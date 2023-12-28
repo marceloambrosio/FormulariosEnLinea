@@ -4,12 +4,14 @@
 
 {% block content %}
 <br>
-  <h2>Lista de Reempadronamiento Comercio Física</h2>
+  <h2>Reempadronamiento Comercio Física</h2>
+  <br>
   <table id="resolucionTable" class="table table-hover">
     <thead>
       <tr>
         <th scope="col" class="col-1">Fecha</th>
-        <th scope="col" class="col-5">Comercio</th>
+        <th scope="col" class="col-4">Comercio</th>
+        <th scope="col" class="col-1">CUIT</th>
         <th scope="col" class="col-2">Estado</th>
         <th scope="col" class="col-4">Acciones</th>
       </tr>
@@ -19,6 +21,7 @@
         <tr>
           <td>{{ reempad.fecha|date:"d/m/Y" }}</td>
           <td>{{ reempad.apellido }} {{ reempad.nombre }} ({{ reempad.nombreFantasia }})</td>
+          <td>{{ reempad.cuit }}</td>
           <td>
             {% if reempad.estado.nombre == "Pendiente" %}
               <span class="badge bg-primary rounded-pill">{{ reempad.estado.nombre }}</span>
@@ -28,12 +31,42 @@
               <span class="badge bg-danger rounded-pill">{{ reempad.estado.nombre }}</span>
             {% endif %}
           </td>          
-          <td>BOTONES</td>
+          <td>
+            <span data-bs-toggle="tooltip" data-bs-placement="top" title="Inscripción AFIP">
+                <button type="button" class="btn btn-primary" onclick="window.open('{{ reempad.inscripcionAFIP.url }}', '_blank');"><i class="bi bi-file-earmark-text"></i></button>
+            </span>
+            <span data-bs-toggle="tooltip" data-bs-placement="top" title="Reempadronamiento">
+                <button type="button" class="btn btn-success" onclick="window.open('{{ reempad.pdf.url }}', '_blank');"><i class="bi bi-file-earmark-text"></i></button>
+            </span>
+            <span data-bs-toggle="tooltip" data-bs-placement="top" title="Actualizar">
+                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#updateModal{{ reempad.id }}"><i class="bi bi-pencil-square"></i></button>
+            </span>
+          </td>
         </tr>
       {% empty %}
         <tr>
           <td colspan="4">No hay registros aún.</td>
         </tr>
+        <!-- Inicio Modal Actualizar -->
+          <div class="modal fade" id="updateModal{{ reempad.id }}" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+              <div class="modal-content">
+                  <div class="modal-header">
+                  <h5 class="modal-title" id="updateModalLabel">Confirmar actualización</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                  <p class="text-center">¿Estás seguro de que deseas actualizar el estado de {{ reempad.nombre }} {{ reempad.apellido }}?</p>
+                  <p class="text-danger text-center"><b>¡Una vez actualizado no podrás deshacer la acción!</b></p>
+                  </div>
+                  <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                  <a href="{% url 'reempad_comercio_fisica_update' reempad.id %}" class="btn btn-danger">Actualizar</a>
+                  </div>
+              </div>
+              </div>
+          </div>
+          <!-- Fin Modal Actualizar -->
       {% endfor %}
     </tbody>
   </table>

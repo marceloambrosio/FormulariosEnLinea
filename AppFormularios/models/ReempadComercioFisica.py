@@ -43,6 +43,7 @@ class ReempadComercioFisica(models.Model):
     domicilioSucursal = models.CharField(max_length=50, blank=True, null=True)
     inscripcionAFIP = models.FileField(upload_to=upload_to_inscripcionAFIP_fisica, validators=[FileExtensionValidator(['pdf'], message="ERROR, el archivo tiene que estar en formato PDF.")])
     pdf = models.FileField(upload_to=upload_to_reempadronamiento_fisica, blank=True, null=True)
+    finalizado = models.BooleanField(default=False)
 
     def __str__(self):
         return self.apellido + ", " + self.nombre + " - " + self.nombreFantasia + " - " + str(self.cuit)
@@ -310,7 +311,8 @@ class ReempadComercioFisica(models.Model):
         os.remove('output.pdf')
 
         # Actualiza el estado
-        estado = Estado.objects.get(nombre='Pendiente')
-        self.estado = estado
+        if self.id is None:
+            estado = Estado.objects.get(nombre='Pendiente')
+            self.estado = estado
 
         super().save(*args, **kwargs)
