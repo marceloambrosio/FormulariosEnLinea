@@ -11,11 +11,11 @@ from reportlab.lib.pagesizes import A4
 from PIL import Image as PilImage
 from PyPDF2 import PdfReader, PdfWriter
 from .models import Estado
-from .uploaders import upload_to_inscripcionAFIP_fisica, upload_to_reempadronamiento_fisica
+from .uploaders import upload_to_inscripcionAFIP_juridica, upload_to_reempadronamiento_juridica
 import io
 
 # Create your models here.
-class ReempadComercioFisica(models.Model):
+class ReempadComercioJuridica(models.Model):
     fecha = models.DateField(default=timezone.now, blank=True, null=True)
     estado = models.ForeignKey(Estado, on_delete=models.PROTECT, blank=True, null=True)
     observaciones = models.TextField(blank=True, null=True)
@@ -25,6 +25,11 @@ class ReempadComercioFisica(models.Model):
     cuit = models.CharField(max_length=20)
     ingresosBrutos = models.CharField(max_length=20)
     convenioMultilateral = models.CharField(max_length=20, blank=True, null=True)
+    irpc_numero = models.CharField(max_length=20, blank=True, null=True)
+    irpc_folio = models.CharField(max_length=20, blank=True, null=True)
+    irpc_libro = models.CharField(max_length=20, blank=True, null=True)
+    irpc_tema = models.CharField(max_length=20, blank=True, null=True)
+    irpc_anio = models.CharField(max_length=20, blank=True, null=True)
     domicilioFiscal = models.CharField(max_length=50)
     localidad = models.CharField(max_length=50)
     codigoPostal = models.IntegerField()
@@ -41,8 +46,19 @@ class ReempadComercioFisica(models.Model):
     rubro4 = models.CharField(max_length=100, blank=True, null=True)
     sucursal = models.BooleanField(default=False)
     domicilioSucursal = models.CharField(max_length=50, blank=True, null=True)
-    inscripcionAFIP = models.FileField(upload_to=upload_to_inscripcionAFIP_fisica, validators=[FileExtensionValidator(['pdf'], message="ERROR, el archivo tiene que estar en formato PDF.")])
-    pdf = models.FileField(upload_to=upload_to_reempadronamiento_fisica, blank=True, null=True)
+    caracter = models.CharField(max_length=100)
+    socio1_nombre = models.CharField(max_length=50, blank=True, null=True)
+    socio1_apellido = models.CharField(max_length=50, blank=True, null=True)
+    socio1_dni = models.CharField(max_length=20, blank=True, null=True)
+    socio1_domicilio = models.CharField(max_length=50, blank=True, null=True)
+    socio1_caracter = models.CharField(max_length=500, blank=True, null=True)
+    socio2_nombre = models.CharField(max_length=50, blank=True, null=True)
+    socio2_apellido = models.CharField(max_length=50, blank=True, null=True)
+    socio2_dni = models.CharField(max_length=20, blank=True, null=True)
+    socio2_domicilio = models.CharField(max_length=50, blank=True, null=True)
+    socio2_caracter = models.CharField(max_length=500, blank=True, null=True)
+    inscripcionAFIP = models.FileField(upload_to=upload_to_inscripcionAFIP_juridica, validators=[FileExtensionValidator(['pdf'], message="ERROR, el archivo tiene que estar en formato PDF.")])
+    pdf = models.FileField(upload_to=upload_to_reempadronamiento_juridica, blank=True, null=True)
 
     def __str__(self):
         return self.apellido + ", " + self.nombre + " - " + self.nombreFantasia + " - " + str(self.cuit)
@@ -81,7 +97,7 @@ class ReempadComercioFisica(models.Model):
         title_width = p.stringWidth(title, "Helvetica", 12)
         p.line(50, 705, 50 + title_width, 705)
         
-        subtitle = "PERSONAS FISICAS"
+        subtitle = "PERSONAS JURIDICAS"
         p.drawString(235, 688, subtitle)
         subtitle_width = p.stringWidth(subtitle, "Helvetica-Bold", 12)
         p.line(235, 683, 235 + subtitle_width, 683)
@@ -216,10 +232,10 @@ class ReempadComercioFisica(models.Model):
         if self.superficieDeposito is not None:
             label = "Superficie del depósito en m2: "
             p.setFont('Helvetica-Bold', 12)
-            p.drawString(270, 350, label)
+            p.drawString(50, 350, label)
             p.setFont('Helvetica', 12)
             length = p.stringWidth(label, "Helvetica-Bold", 12)
-            p.drawString(275 + length, 350, str(self.superficieDeposito))
+            p.drawString(61 + length, 350, str(self.superficieDeposito))
 
         # Dibuja "Posee sucursal/es:" en negrita y luego el valor en texto normal
         label = "Posee sucursal/es: "

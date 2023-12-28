@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br>
+<div class="card" style="width: 100%;">
+    <div class="card-body">
+        <h4 class="card-title">Reempadronamiento Comercio Juridica</h4>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+                <br>
+                <div class="row">
+                    <div class="col-4">
+                        <h6>Nombre (*)</h6>
+                        {{ form.nombre }}
+                    </div>
+                    <div class="col-4">
+                        <h6>Apellido (*)</h6>
+                        {{ form.apellido }}
+                    </div>
+                    <div class="col-4">
+                        <h6>Nombre fantasia (*)</h6>
+                        {{ form.nombreFantasia }}
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-4">
+                        <h6>CUIT (*)</h6>
+                        {{ form.cuit }}
+                    </div>
+                    <div class="col-4">
+                        <h6>Ing. Brutos (*)</h6>
+                        {{ form.ingresosBrutos }}
+                    </div>
+                    <div class="col-4">
+                        <h6>Convenio Multilateral</h6>
+                        {{ form.convenioMultilateral }}
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <h6>Inscripción en el Registro Público de Comercio</h6>
+                    <div class="col-2">
+                        <h6>Número (*)</h6>
+                        {{ form.irpc_numero }}
+                    </div>
+                    <div class="col-2">
+                        <h6>Folio (*)</h6>
+                        {{ form.irpc_folio }}
+                    </div>
+                    <div class="col-3">
+                        <h6>Libro (*)</h6>
+                        {{ form.irpc_libro }}
+                    </div>
+                    <div class="col-3">
+                        <h6>Tema (*)</h6>
+                        {{ form.irpc_tema }}
+                    </div>
+                    <div class="col-2">
+                        <h6>Año (*)</h6>
+                        {{ form.irpc_anio }}
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-4">
+                        <h6>Domicilio Fiscal (*)</h6>
+                        {{ form.domicilioFiscal }}
+                    </div>
+                    <div class="col-3">
+                        <h6>Localidad (*)</h6>
+                        {{ form.localidad }}
+                    </div>
+                    <div class="col-3">
+                        <h6>Provincia (*)</h6>
+                        {{ form.provincia }}
+                    </div>
+                    <div class="col-2">
+                        <h6>Codigo Postal (*)</h6>
+                        {{ form.codigoPostal }}
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-3">
+                        <h6>Domicilio Comercial (*)</h6>
+                        {{ form.domicilioComercial }}
+                    </div>
+                    <div class="col-3">
+                        <h6>Telefono Comercial (*)</h6>
+                        {{ form.telefonoComercial }}
+                    </div>
+                    <div class="col-3">
+                        <h6>Telefono Titular (*)</h6>
+                        {{ form.telefonoTitular }}
+                    </div>
+                    <div class="col-3">
+                        <h6>Email (*)</h6>
+                        {{ form.email }}
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-3">
+                        <h6>Actividad Principal (*)</h6>
+                        {{ form.actividadPrincipal }}
+                    </div>
+                    <div class="col-3">
+                        <h6>Otros rubros</h6>
+                        {{ form.rubro2 }}
+                    </div>
+                    <div class="col-3">
+                        <h6>Otros rubros</h6>
+                        {{ form.rubro3 }}
+                    </div>
+                    <div class="col-3">
+                        <h6>Otros rubros</h6>
+                        {{ form.rubro4 }}
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-3">
+                        <h6>Superficie del local (m2) (*)</h6>
+                        {{ form.superficieLocal }}
+                    </div>
+                    <div class="col-3">
+                        <h6>Superficie del depositivo (si posee)</h6>
+                        {{ form.superficieDeposito }}
+                    </div>
+                    <div class="col-1">
+                        <h6>Sucursal</h6>
+                        {{ form.sucursal }}
+                    </div>
+                    <div class="col-5">
+                        <h6>Domicilio de Sucursal (si posee)</h6>
+                        {{ form.domicilioSucursal }}
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-5">
+                        <h6>Inscripcion AFIP (en PDF) (*)</h6>
+                        {{ form.inscripcionAFIP }}
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-primary float-end" type="submit">Guardar</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
