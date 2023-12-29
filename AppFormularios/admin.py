@@ -8,7 +8,7 @@ class ReempadComercioFisicaAdmin(admin.ModelAdmin):
     ordering = ['fecha']
 
 class ReempadComercioJuridicaAdmin(admin.ModelAdmin):
-    search_fields = ('nombre', 'apellido', 'nombreFantasia', 'cuit'),
+    search_fields = ('razonSocial', 'nombreFantasia', 'cuit'),
     ordering = ['fecha']
 
 class EstadoAdmin(admin.ModelAdmin):

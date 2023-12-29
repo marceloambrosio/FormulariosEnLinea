@@ -36,11 +36,10 @@ class ReempadComercioFisicaForm(forms.ModelForm):
 class ReempadComercioJuridicaForm(forms.ModelForm):
     class Meta:
         model = ReempadComercioJuridica
-        fields = ['nombre', 'apellido', 'nombreFantasia', 'cuit', 'ingresosBrutos', 'convenioMultilateral', 'irpc_numero', 'irpc_folio', 'irpc_libro', 'irpc_tema', 'irpc_anio', 'domicilioFiscal', 'localidad', 'codigoPostal', 'provincia', 'domicilioComercial', 'email', 'telefonoComercial', 'telefonoTitular', 'superficieLocal', 'superficieDeposito', 'actividadPrincipal', 'rubro2', 'rubro3', 'rubro4', 'sucursal', 'domicilioSucursal', 'socio1_nombre', 'socio1_apellido', 'socio1_dni', 'socio1_domicilio', 'socio1_caracter', 'socio2_nombre', 'socio2_apellido', 'socio2_dni', 'socio2_domicilio', 'socio2_caracter', 'inscripcionAFIP']
+        fields = ['razonSocial', 'nombreFantasia', 'caracter', 'cuit', 'ingresosBrutos', 'convenioMultilateral', 'irpc_numero', 'irpc_folio', 'irpc_libro', 'irpc_tema', 'irpc_anio', 'domicilioFiscal', 'localidad', 'codigoPostal', 'provincia', 'domicilioComercial', 'email', 'telefonoComercial', 'telefonoTitular', 'superficieLocal', 'superficieDeposito', 'actividadPrincipal', 'rubro2', 'rubro3', 'rubro4', 'sucursal', 'domicilioSucursal', 'socio1_nombre', 'socio1_apellido', 'socio1_dni', 'socio1_domicilio', 'socio1_caracter', 'socio2_nombre', 'socio2_apellido', 'socio2_dni', 'socio2_domicilio', 'socio2_caracter', 'inscripcionAFIP']
         exclude = ['fecha', 'estado']
         widgets = {
-            'nombre': TextInput(attrs={'class': 'form-control'}),
-            'apellido': TextInput(attrs={'class': 'form-control'}),
+            'razonSocial': TextInput(attrs={'class': 'form-control'}),
             'nombreFantasia': TextInput(attrs={'class': 'form-control'}),
             'cuit': NumberInput(attrs={'class': 'form-control'}),
             'ingresosBrutos': NumberInput(attrs={'class': 'form-control'}),
@@ -66,6 +65,7 @@ class ReempadComercioJuridicaForm(forms.ModelForm):
             'rubro4': TextInput(attrs={'class': 'form-control'}),
             'sucursal': Select(choices=[(False, 'No'), (True, 'Sí')], attrs={'class': 'form-control'}),
             'domicilioSucursal': TextInput(attrs={'class': 'form-control'}),
+            'caracter': TextInput(attrs={'class': 'form-control'}),
             'socio1_nombre': TextInput(attrs={'class': 'form-control'}),
             'socio1_apellido': TextInput(attrs={'class': 'form-control'}),
             'socio1_dni': NumberInput(attrs={'class': 'form-control'}),

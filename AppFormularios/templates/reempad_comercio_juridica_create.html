@@ -11,16 +11,16 @@
                 <br>
                 <div class="row">
                     <div class="col-4">
-                        <h6>Nombre (*)</h6>
-                        {{ form.nombre }}
-                    </div>
-                    <div class="col-4">
-                        <h6>Apellido (*)</h6>
-                        {{ form.apellido }}
+                        <h6>Razón Social (*)</h6>
+                        {{ form.razonSocial }}
                     </div>
                     <div class="col-4">
                         <h6>Nombre fantasia (*)</h6>
                         {{ form.nombreFantasia }}
+                    </div>
+                    <div class="col-4">
+                        <h6>Caracter (*)</h6>
+                        {{ form.caracter }}
                     </div>
                 </div>
                 <br>
@@ -40,30 +40,6 @@
                 </div>
                 <br>
                 <div class="row">
-                    <h6>Inscripción en el Registro Público de Comercio</h6>
-                    <div class="col-2">
-                        <h6>Número (*)</h6>
-                        {{ form.irpc_numero }}
-                    </div>
-                    <div class="col-2">
-                        <h6>Folio (*)</h6>
-                        {{ form.irpc_folio }}
-                    </div>
-                    <div class="col-3">
-                        <h6>Libro (*)</h6>
-                        {{ form.irpc_libro }}
-                    </div>
-                    <div class="col-3">
-                        <h6>Tema (*)</h6>
-                        {{ form.irpc_tema }}
-                    </div>
-                    <div class="col-2">
-                        <h6>Año (*)</h6>
-                        {{ form.irpc_anio }}
-                    </div>
-                </div>
-                <br>
-                <div class="row">
                     <div class="col-4">
                         <h6>Domicilio Fiscal (*)</h6>
                         {{ form.domicilioFiscal }}
@@ -72,30 +48,30 @@
                         <h6>Localidad (*)</h6>
                         {{ form.localidad }}
                     </div>
-                    <div class="col-3">
-                        <h6>Provincia (*)</h6>
-                        {{ form.provincia }}
-                    </div>
                     <div class="col-2">
                         <h6>Codigo Postal (*)</h6>
                         {{ form.codigoPostal }}
                     </div>
+                    <div class="col-3">
+                        <h6>Provincia (*)</h6>
+                        {{ form.provincia }}
+                    </div>
                 </div>
                 <br>
                 <div class="row">
-                    <div class="col-3">
+                    <div class="col-4">
                         <h6>Domicilio Comercial (*)</h6>
                         {{ form.domicilioComercial }}
                     </div>
-                    <div class="col-3">
+                    <div class="col-2">
                         <h6>Telefono Comercial (*)</h6>
                         {{ form.telefonoComercial }}
                     </div>
-                    <div class="col-3">
+                    <div class="col-2">
                         <h6>Telefono Titular (*)</h6>
                         {{ form.telefonoTitular }}
                     </div>
-                    <div class="col-3">
+                    <div class="col-4">
                         <h6>Email (*)</h6>
                         {{ form.email }}
                     </div>
@@ -139,6 +115,88 @@
                     </div>
                 </div>
                 <br>
+                <hr>
+                <div class="row">
+                    <u><h6>Inscripción en el Registro Público de Comercio</h6></u>
+                    <div class="col-2">
+                        <h6>Número (*)</h6>
+                        {{ form.irpc_numero }}
+                    </div>
+                    <div class="col-2">
+                        <h6>Folio (*)</h6>
+                        {{ form.irpc_folio }}
+                    </div>
+                    <div class="col-3">
+                        <h6>Libro (*)</h6>
+                        {{ form.irpc_libro }}
+                    </div>
+                    <div class="col-3">
+                        <h6>Tema (*)</h6>
+                        {{ form.irpc_tema }}
+                    </div>
+                    <div class="col-2">
+                        <h6>Año (*)</h6>
+                        {{ form.irpc_anio }}
+                    </div>
+                </div>
+                <br>
+                <hr>
+                <u><h6>Integrante de la Sociedad</h6></u>
+                <div class="row">
+                    <div class="col-4">
+                        <h6>Apellido</h6>
+                        {{ form.socio1_apellido }}
+                    </div>
+                    <div class="col-4">
+                        <h6>Nombre</h6>
+                        {{ form.socio1_nombre }}
+                    </div>
+                    <div class="col-4">
+                        <h6>DNI</h6>
+                        {{ form.socio1_dni }}
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-6">
+                        <h6>Domicilio</h6>
+                        {{ form.socio1_domicilio }}
+                    </div>
+                    <div class="col-6">
+                        <h6>Carácter</h6>
+                        {{ form.socio1_caracter }}
+                    </div>
+                </div>
+                <br>
+                <hr>
+                <u><h6>Integrante de la Sociedad</h6></u>
+                <div class="row">
+                    <div class="col-4">
+                        <h6>Apellido</h6>
+                        {{ form.socio2_apellido }}
+                    </div>
+                    <div class="col-4">
+                        <h6>Nombre</h6>
+                        {{ form.socio2_nombre }}
+                    </div>
+                    <div class="col-4">
+                        <h6>DNI</h6>
+                        {{ form.socio2_dni }}
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-6">
+                        <h6>Domicilio</h6>
+                        {{ form.socio2_domicilio }}
+                    </div>
+                    <div class="col-6">
+                        <h6>Carácter</h6>
+                        {{ form.socio2_caracter }}
+                    </div>
+                </div>
+                <br>
+                <hr>
                 <div class="row">
                     <div class="col-5">
                         <h6>Inscripcion AFIP (en PDF) (*)</h6>
@@ -150,4 +208,5 @@
         </form>
     </div>
 </div>
+<br><br>
 {% endblock %}

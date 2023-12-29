@@ -19,8 +19,7 @@ class ReempadComercioJuridica(models.Model):
     fecha = models.DateField(default=timezone.now, blank=True, null=True)
     estado = models.ForeignKey(Estado, on_delete=models.PROTECT, blank=True, null=True)
     observaciones = models.TextField(blank=True, null=True)
-    nombre = models.CharField(max_length=50)
-    apellido = models.CharField(max_length=50)
+    razonSocial = models.CharField(max_length=50)
     nombreFantasia = models.CharField(max_length=50)
     cuit = models.CharField(max_length=20)
     ingresosBrutos = models.CharField(max_length=20)
@@ -46,7 +45,7 @@ class ReempadComercioJuridica(models.Model):
     rubro4 = models.CharField(max_length=100, blank=True, null=True)
     sucursal = models.BooleanField(default=False)
     domicilioSucursal = models.CharField(max_length=50, blank=True, null=True)
-    caracter = models.CharField(max_length=100)
+    caracter = models.CharField(max_length=100, blank=True, null=True)
     socio1_nombre = models.CharField(max_length=50, blank=True, null=True)
     socio1_apellido = models.CharField(max_length=50, blank=True, null=True)
     socio1_dni = models.CharField(max_length=20, blank=True, null=True)
@@ -61,7 +60,7 @@ class ReempadComercioJuridica(models.Model):
     pdf = models.FileField(upload_to=upload_to_reempadronamiento_juridica, blank=True, null=True)
 
     def __str__(self):
-        return self.apellido + ", " + self.nombre + " - " + self.nombreFantasia + " - " + str(self.cuit)
+        return self.razonSocial + " - " + self.nombreFantasia + " - " + str(self.cuit)
     
     def save(self, *args, **kwargs):
         # Guarda el objeto, lo que debería almacenar el archivo inscripcionAFIP
@@ -106,13 +105,13 @@ class ReempadComercioJuridica(models.Model):
         pdfmetrics.registerFont(TTFont('VeraBd', 'VeraBd.ttf'))
         p.setFont('VeraBd', 12)
 
-        # Dibuja "Apellido y nombre:" en negrita y luego el valor en texto normal
-        label = "Apellido y nombre: "
+        # Dibuja "Razón Social:" en negrita y luego el valor en texto normal
+        label = "Razón Social: "
         p.setFont('Helvetica-Bold', 12)
         p.drawString(50, 650, label)
         p.setFont('Helvetica', 12)
         length = p.stringWidth(label, "Helvetica-Bold", 12)
-        p.drawString(80 + length, 650, self.apellido + " " + self.nombre)
+        p.drawString(80 + length, 650, self.razonSocial)
 
         # Dibuja "Nombre de fantasía:" en negrita y luego el valor en texto normal
         label = "Nombre de fantasía: "
@@ -141,31 +140,73 @@ class ReempadComercioJuridica(models.Model):
         length = p.stringWidth(label, "Helvetica-Bold", 12)
         p.drawString(x + length + 20, 590, self.ingresosBrutos)
         
+        label = "Carácter: "
+        p.setFont('Helvetica-Bold', 12)
+        p.drawString(50, 560, label)
+        p.setFont('Helvetica', 12)
+        length = p.stringWidth(label, "Helvetica-Bold", 12)
+        p.drawString(61 + length + 20, 560, self.caracter)
+        
         if self.convenioMultilateral is not None:
             label = "Convenio Multilateral: "
             p.setFont('Helvetica-Bold', 12)
-            p.drawString(50, 560, label)
+            p.drawString(270, 560, label)
             p.setFont('Helvetica', 12)
             length = p.stringWidth(label, "Helvetica-Bold", 12)
-            p.drawString(61 + length, 560, self.convenioMultilateral)
+            p.drawString(281 + length, 560, self.convenioMultilateral)
 
         # Dibuja una línea horizontal que divida la hoja
-        p.line(50, 535, A4[0] - 50, 535)
-        
+        p.line(50, 540, A4[0] - 50, 540)
+
+        label = "Inscripción en el Registro Publico de Comercio"
+        p.setFont('Helvetica-Bold', 9)
+        p.drawString(50, 520, label)
+
+        # Inicializa la posición x
+        x = 50
+
+        # Lista de variables y sus valores
+        variables = [
+            ("Número:", self.irpc_numero),
+            ("Folio:", self.irpc_folio),
+            ("Libro:", self.irpc_libro),
+            ("Tema:", self.irpc_tema),
+            ("Año:", self.irpc_anio)
+        ]
+
+        # Itera sobre las variables
+        for label, value in variables:
+            # Dibuja la etiqueta en negrita
+            p.setFont('Helvetica-Bold', 12)
+            p.drawString(x, 500, label)
+            
+            # Calcula la longitud de la etiqueta
+            length = p.stringWidth(label, "Helvetica-Bold", 12)
+            
+            # Dibuja el valor en texto normal
+            p.setFont('Helvetica', 12)
+            p.drawString(x + length + 10, 500, str(value))
+            
+            # Calcula la nueva posición x para la siguiente variable
+            x = x + length + p.stringWidth(str(value), "Helvetica", 12) + 20
+
+        # Dibuja una línea horizontal que divida la hoja
+        p.line(50, 490, A4[0] - 50, 490)
+
         label = "Domicilio Fiscal: "
-        p.setFont('Helvetica-Bold', 12)
-        p.drawString(50, 500, label)
-        p.setFont('Helvetica', 12)
-        length = p.stringWidth(label, "Helvetica-Bold", 12)
-        p.drawString(61 + length, 500, self.domicilioFiscal)
-        
-        # Dibuja "Localidad:" en negrita y luego el valor en texto normal
-        label = "Localidad: "
         p.setFont('Helvetica-Bold', 12)
         p.drawString(50, 470, label)
         p.setFont('Helvetica', 12)
         length = p.stringWidth(label, "Helvetica-Bold", 12)
-        p.drawString(50 + length, 470, self.localidad)
+        p.drawString(61 + length, 470, self.domicilioFiscal)
+        
+        # Dibuja "Localidad:" en negrita y luego el valor en texto normal
+        label = "Localidad: "
+        p.setFont('Helvetica-Bold', 12)
+        p.drawString(50, 440, label)
+        p.setFont('Helvetica', 12)
+        length = p.stringWidth(label, "Helvetica-Bold", 12)
+        p.drawString(50 + length, 440, self.localidad)
 
         # Calcula la nueva posición x para "Cod. Postal:"
         x = 70 + length + p.stringWidth(self.localidad, "Helvetica", 12) + 50
@@ -173,10 +214,10 @@ class ReempadComercioJuridica(models.Model):
         # Dibuja "Cod. Postal:" en negrita y luego el valor en texto normal
         label = "Cod. Postal: "
         p.setFont('Helvetica-Bold', 12)
-        p.drawString(x, 470, label)
+        p.drawString(x, 440, label)
         p.setFont('Helvetica', 12)
         length = p.stringWidth(label, "Helvetica-Bold", 12)
-        p.drawString(x + length + 10, 470, str(self.codigoPostal))
+        p.drawString(x + length + 10, 440, str(self.codigoPostal))
 
         # Calcula la nueva posición x para "Provincia:"
         x = x + length + p.stringWidth(str(self.codigoPostal), "Helvetica", 12) + 50
@@ -184,32 +225,32 @@ class ReempadComercioJuridica(models.Model):
         # Dibuja "Provincia:" en negrita y luego el valor en texto normal
         label = "Provincia: "
         p.setFont('Helvetica-Bold', 12)
-        p.drawString(x, 470, label)
+        p.drawString(x, 440, label)
         p.setFont('Helvetica', 12)
         length = p.stringWidth(label, "Helvetica-Bold", 12)
-        p.drawString(x + length + 10, 470, self.provincia)
+        p.drawString(x + length + 10, 440, self.provincia)
         
         label = "Domicilio Comercial: "
-        p.setFont('Helvetica-Bold', 12)
-        p.drawString(50, 440, label)
-        p.setFont('Helvetica', 12)
-        length = p.stringWidth(label, "Helvetica-Bold", 12)
-        p.drawString(61 + length, 440, self.domicilioComercial)
-        
-        label = "E-mail: "
         p.setFont('Helvetica-Bold', 12)
         p.drawString(50, 410, label)
         p.setFont('Helvetica', 12)
         length = p.stringWidth(label, "Helvetica-Bold", 12)
-        p.drawString(61 + length, 410, self.email)
+        p.drawString(61 + length, 410, self.domicilioComercial)
         
-        # Dibuja "Teléfono Comercial:" en negrita y luego el valor en texto normal
-        label = "Teléfono Comercial: "
+        label = "E-mail: "
         p.setFont('Helvetica-Bold', 12)
         p.drawString(50, 380, label)
         p.setFont('Helvetica', 12)
         length = p.stringWidth(label, "Helvetica-Bold", 12)
-        p.drawString(60 + length, 380, self.telefonoComercial)
+        p.drawString(61 + length, 380, self.email)
+        
+        # Dibuja "Teléfono Comercial:" en negrita y luego el valor en texto normal
+        label = "Teléfono Comercial: "
+        p.setFont('Helvetica-Bold', 12)
+        p.drawString(50, 350, label)
+        p.setFont('Helvetica', 12)
+        length = p.stringWidth(label, "Helvetica-Bold", 12)
+        p.drawString(60 + length, 350, self.telefonoComercial)
 
         # Calcula la nueva posición x para "Teléfono del Titular:"
         x = 40 + length + p.stringWidth(self.telefonoComercial, "Helvetica", 12) + 50
@@ -217,36 +258,36 @@ class ReempadComercioJuridica(models.Model):
         # Dibuja "Teléfono del Titular:" en negrita y luego el valor en texto normal
         label = "Teléfono del Titular: "
         p.setFont('Helvetica-Bold', 12)
-        p.drawString(x, 380, label)
+        p.drawString(x, 350, label)
         p.setFont('Helvetica', 12)
         length = p.stringWidth(label, "Helvetica-Bold", 12)
-        p.drawString(x + length + 10, 380, self.telefonoTitular)
+        p.drawString(x + length + 10, 350, self.telefonoTitular)
         
         label = "Superficie del local en m2: "
-        p.setFont('Helvetica-Bold', 12)
-        p.drawString(50, 350, label)
-        p.setFont('Helvetica', 12)
-        length = p.stringWidth(label, "Helvetica-Bold", 12)
-        p.drawString(61 + length, 350, str(self.superficieLocal))
-        
-        if self.superficieDeposito is not None:
-            label = "Superficie del depósito en m2: "
-            p.setFont('Helvetica-Bold', 12)
-            p.drawString(50, 350, label)
-            p.setFont('Helvetica', 12)
-            length = p.stringWidth(label, "Helvetica-Bold", 12)
-            p.drawString(61 + length, 350, str(self.superficieDeposito))
-
-        # Dibuja "Posee sucursal/es:" en negrita y luego el valor en texto normal
-        label = "Posee sucursal/es: "
         p.setFont('Helvetica-Bold', 12)
         p.drawString(50, 320, label)
         p.setFont('Helvetica', 12)
         length = p.stringWidth(label, "Helvetica-Bold", 12)
+        p.drawString(61 + length, 320, str(self.superficieLocal))
+        
+        if self.superficieDeposito is not None:
+            label = "Superficie del depósito en m2: "
+            p.setFont('Helvetica-Bold', 12)
+            p.drawString(265, 320, label)
+            p.setFont('Helvetica', 12)
+            length = p.stringWidth(label, "Helvetica-Bold", 12)
+            p.drawString(276 + length, 320, str(self.superficieDeposito))
+
+        # Dibuja "Posee sucursal/es:" en negrita y luego el valor en texto normal
+        label = "Posee sucursal/es: "
+        p.setFont('Helvetica-Bold', 12)
+        p.drawString(50, 290, label)
+        p.setFont('Helvetica', 12)
+        length = p.stringWidth(label, "Helvetica-Bold", 12)
         if self.sucursal:
-            p.drawString(55 + length, 320, "Sí")
+            p.drawString(55 + length, 290, "Sí")
         else:
-            p.drawString(55 + length, 320, "No")
+            p.drawString(55 + length, 290, "No")
 
         # Calcula la nueva posición x para "Domicilio Sucursal:"
         x = 40 + length + p.stringWidth("Sí" if self.sucursal else "No", "Helvetica", 12) + 50
@@ -255,38 +296,100 @@ class ReempadComercioJuridica(models.Model):
         if self.domicilioSucursal is not None:
             label = "Domicilio Sucursal: "
             p.setFont('Helvetica-Bold', 12)
-            p.drawString(x, 320, label)
+            p.drawString(x, 290, label)
             p.setFont('Helvetica', 12)
             length = p.stringWidth(label, "Helvetica-Bold", 12)
-            p.drawString(x + length + 20, 320, self.domicilioSucursal)
+            p.drawString(x + length + 20, 290, self.domicilioSucursal)
         
         # Dibuja una línea horizontal que divida la hoja
-        p.line(50, 290, A4[0] - 50, 290)
+        p.line(50, 275, A4[0] - 50, 275)
 
         label = "Actividad Principal: "
         p.setFont('Helvetica-Bold', 12)
-        p.drawString(50, 260, label)
+        p.drawString(50, 250, label)
         p.setFont('Helvetica', 12)
         length = p.stringWidth(label, "Helvetica-Bold", 12)
-        p.drawString(61 + length, 260, self.actividadPrincipal)
+        p.drawString(61 + length, 250, self.actividadPrincipal)
         
         if self.rubro2 is not None:
             label = "Otros rubros de actividad: "
             p.setFont('Helvetica-Bold', 12)
-            p.drawString(50, 230, label)
+            p.drawString(50, 220, label)
             p.setFont('Helvetica', 12)
             length = p.stringWidth(label, "Helvetica-Bold", 12)
-            p.drawString(61 + length, 230,"- " + self.rubro2)
+            p.drawString(61 + length, 220,"- " + self.rubro2)
         
         if self.rubro3 is not None:
             p.setFont('Helvetica', 12)
             length = p.stringWidth(label, "Helvetica-Bold", 12)
-            p.drawString(61 + length, 210,"- " + self.rubro3)
+            p.drawString(61 + length, 200,"- " + self.rubro3)
         
         if self.rubro4 is not None:
             p.setFont('Helvetica', 12)
             length = p.stringWidth(label, "Helvetica-Bold", 12)
-            p.drawString(61 + length, 170,"- " + self.rubro4)
+            p.drawString(61 + length, 180,"- " + self.rubro4)
+
+        # Dibuja una línea horizontal que divida la hoja
+        p.line(50, 170, A4[0] - 50, 170)
+
+        label = "Integrante de la Sociedad"
+        p.setFont('Helvetica-Bold', 9)
+        p.drawString(230, 155, label)
+
+        if self.socio1_nombre is not None:
+            label = "Apellido y nombre: "
+            p.setFont('Helvetica-Bold', 12)
+            p.drawString(50, 135, label)
+            p.setFont('Helvetica', 12)
+            length = p.stringWidth(label, "Helvetica-Bold", 12)
+            p.drawString(80 + length, 135, self.socio1_apellido + " " + self.socio1_nombre + "   DNI: " + self.socio1_dni)
+
+        if self.socio1_caracter is not None:
+            label = "Caracter: "
+            p.setFont('Helvetica-Bold', 12)
+            p.drawString(50, 115, label)
+            p.setFont('Helvetica', 12)
+            length = p.stringWidth(label, "Helvetica-Bold", 12)
+            p.drawString(70 + length, 115, self.socio1_caracter)
+
+        if self.socio1_domicilio is not None:
+            label = "Domicilio: "
+            p.setFont('Helvetica-Bold', 12)
+            p.drawString(230, 115, label)
+            p.setFont('Helvetica', 12)
+            length = p.stringWidth(label, "Helvetica-Bold", 12)
+            p.drawString(310, 115, self.socio1_domicilio)
+        
+        # Dibuja una línea horizontal que divida la hoja
+        p.line(50, 100, A4[0] - 50, 100)
+
+        label = "Integrante de la Sociedad"
+        p.setFont('Helvetica-Bold', 9)
+        p.drawString(230, 80, label)
+
+        if self.socio2_nombre is not None:
+            label = "Apellido y nombre: "
+            p.setFont('Helvetica-Bold', 12)
+            p.drawString(50, 60, label)
+            p.setFont('Helvetica', 12)
+            length = p.stringWidth(label, "Helvetica-Bold", 12)
+            p.drawString(80 + length, 60, self.socio2_apellido + " " + self.socio2_nombre + "   DNI: " + self.socio2_dni)
+
+        if self.socio2_caracter is not None:
+            label = "Caracter: "
+            p.setFont('Helvetica-Bold', 12)
+            p.drawString(50, 40, label)
+            p.setFont('Helvetica', 12)
+            length = p.stringWidth(label, "Helvetica-Bold", 12)
+            p.drawString(70 + length, 40, self.socio2_caracter)
+
+        if self.socio2_domicilio is not None:
+            label = "Domicilio: "
+            p.setFont('Helvetica-Bold', 12)
+            p.drawString(230, 40, label)
+            p.setFont('Helvetica', 12)
+            length = p.stringWidth(label, "Helvetica-Bold", 12)
+            p.drawString(310, 40, self.socio2_domicilio)
         
     # Cierra el objeto PDF limpiamente.
         p.showPage()
