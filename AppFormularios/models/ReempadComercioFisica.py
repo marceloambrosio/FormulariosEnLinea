@@ -313,7 +313,7 @@ class ReempadComercioFisica(models.Model):
 
     def save(self, *args, **kwargs):
         # Actualiza el estado
-        if self.id is None:
+        if self.estado is None:
             estado = Estado.objects.get(nombre='Pendiente')
             self.estado = estado
 

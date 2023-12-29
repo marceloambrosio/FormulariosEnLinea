@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic.edit import CreateView, UpdateView
@@ -27,6 +27,11 @@ class ReempadComercioFisicaCreateView(CreateView):
 class ReempadComercioFisicaUpdateView(UpdateView):
     model = ReempadComercioFisica
     fields = ['estado', 'observaciones']
+    success_url = reverse_lazy('reempad_comercio_fisica_list')
+
+    def form_valid(self, form):
+        form.instance.finalizado = True
+        return redirect('reempad_comercio_fisica_list')
 
 class ReempadComercioFisicaListView(ListView):
     model = ReempadComercioFisica
