@@ -6,6 +6,7 @@ from .views import *
 
 urlpatterns = [
     path('', RedirectView.as_view(url='/home')),
+    path('home/', HomeView.as_view(), name='home'),
     path('formulario_completado', FormularioCompletadoView.as_view(), name='formulario_completado'),
     path('reempad_comercio_fisica/', ReempadComercioFisicaCreateView.as_view(), name='reempad_comercio_fisica'),
     path('reempad_comercio_fisica_update/<int:pk>/', ReempadComercioFisicaUpdateView.as_view(), name='reempad_comercio_fisica_update'),

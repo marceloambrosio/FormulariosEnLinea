@@ -320,4 +320,8 @@ class ReempadComercioFisica(models.Model):
         # Borra el archivo 'output.pdf'
         os.remove('output.pdf')
 
+        # Genera el codigo_identificacion después de guardar el objeto
+        if self.codigo_identificacion is None:
+            self.codigo_identificacion = 'RMF' + str(self.id).zfill(6)
+
         super().save(update_fields=['codigo_identificacion', 'pdf'])

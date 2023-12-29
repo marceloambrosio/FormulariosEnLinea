@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<br>
+<h5>Comercio</h5>
+<hr>
+<div class="row">
+    <div class="col-sm-4 mb-3 mb-sm-0">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Reempadronamiento Comercio Física</h5>
+          <p class="card-text">Completar el formulario para el reempadronamiento de comercio de personas físicas.</p>
+          <a href="{% url 'reempad_comercio_fisica' %}" class="btn float-end" style="background-color: #E36414;">Formulario</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4 mb-3 mb-sm-0">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Reempadronamiento Comercio Jurídica</h5>
+          <p class="card-text">Completar el formulario para el reempadronamiento de comercio de personas jurídica.</p>
+          <a href="{% url 'reempad_comercio_juridica' %}" class="btn float-end" style="background-color: #E36414;">Formulario</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

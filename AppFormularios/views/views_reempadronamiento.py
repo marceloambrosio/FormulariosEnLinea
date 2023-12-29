@@ -15,7 +15,7 @@ class FormularioCompletadoView(View):
 class ReempadComercioFisicaCreateView(CreateView):
     model = ReempadComercioFisica
     form_class = ReempadComercioFisicaForm
-    template_name = 'reempad_comercio_fisica_create.html'
+    template_name = 'reempadronamiento/reempad_comercio_fisica_create.html'
 
     def form_valid(self, form):
         # Guarda el objeto sin confirmar para obtener el id
@@ -41,12 +41,12 @@ class ReempadComercioFisicaUpdateView(UpdateView):
 
 class ReempadComercioFisicaListView(ListView):
     model = ReempadComercioFisica
-    template_name = 'reempad_comercio_fisica_list.html'
+    template_name = 'reempadronamiento/reempad_comercio_fisica_list.html'
 
 class ReempadComercioJuridicaCreateView(CreateView):
     model = ReempadComercioJuridica
     form_class = ReempadComercioJuridicaForm
-    template_name = 'reempad_comercio_juridica_create.html'
+    template_name = 'reempadronamiento/reempad_comercio_juridica_create.html'
     
     def form_valid(self, form):
         # Guarda el objeto sin confirmar para obtener el id
@@ -72,4 +72,4 @@ class ReempadComercioJuridicaUpdateView(UpdateView):
     
 class ReempadComercioJuridicaListView(ListView):
     model = ReempadComercioJuridica
-    template_name = 'reempad_comercio_juridica_list.html'
+    template_name = 'reempadronamiento/reempad_comercio_juridica_list.html'
