@@ -50,6 +50,15 @@ class ReempadComercioFisica(models.Model):
         return self.apellido + ", " + self.nombre + " - " + self.nombreFantasia + " - " + str(self.cuit)
     
     def save(self, *args, **kwargs):
+        # Actualiza el estado
+        if self.id is None:
+            estado = Estado.objects.get(nombre='Pendiente')
+            self.estado = estado
+
+        # Genera el codigo_identificacion después de guardar el objeto
+        if self.codigo_identificacion is None:
+            self.codigo_identificacion = 'RMF' + str(self.id).zfill(6)
+
         # Guarda el objeto, lo que debería almacenar el archivo inscripcionAFIP
         super().save(*args, **kwargs)
 
@@ -311,15 +320,4 @@ class ReempadComercioFisica(models.Model):
         # Borra el archivo 'output.pdf'
         os.remove('output.pdf')
 
-    def save(self, *args, **kwargs):
-        # Actualiza el estado
-        if self.estado is None:
-            estado = Estado.objects.get(nombre='Pendiente')
-            self.estado = estado
-
-        super().save(*args, **kwargs)
-
-        # Genera el codigo_identificacion después de guardar el objeto
-        if self.codigo_identificacion is None:
-            self.codigo_identificacion = 'RMF' + str(self.id).zfill(6)
-            super().save(update_fields=['codigo_identificacion'])
+        super().save(update_fields=['codigo_identificacion', 'pdf'])

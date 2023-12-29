@@ -59,11 +59,21 @@ class ReempadComercioJuridica(models.Model):
     socio2_caracter = models.CharField(max_length=500, blank=True, null=True)
     inscripcionAFIP = models.FileField(upload_to=upload_to_inscripcionAFIP_juridica, validators=[FileExtensionValidator(['pdf'], message="ERROR, el archivo tiene que estar en formato PDF.")])
     pdf = models.FileField(upload_to=upload_to_reempadronamiento_juridica, blank=True, null=True)
+    finalizado = models.BooleanField(default=False)
 
     def __str__(self):
         return self.razonSocial + " - " + self.nombreFantasia + " - " + str(self.cuit)
     
     def save(self, *args, **kwargs):
+        # Actualiza el estado
+        if self.id is None:
+            estado = Estado.objects.get(nombre='Pendiente')
+            self.estado = estado
+
+        # Genera el codigo_identificacion después de guardar el objeto
+        if self.codigo_identificacion is None:
+            self.codigo_identificacion = 'RMJ' + str(self.id).zfill(6)
+
         # Guarda el objeto, lo que debería almacenar el archivo inscripcionAFIP
         super().save(*args, **kwargs)
 
@@ -330,14 +340,14 @@ class ReempadComercioJuridica(models.Model):
             length = p.stringWidth(label, "Helvetica-Bold", 12)
             p.drawString(61 + length, 180,"- " + self.rubro4)
 
-        # Dibuja una línea horizontal que divida la hoja
-        p.line(50, 170, A4[0] - 50, 170)
-
-        label = "Integrante de la Sociedad"
-        p.setFont('Helvetica-Bold', 9)
-        p.drawString(230, 155, label)
-
         if self.socio1_nombre is not None:
+            # Dibuja una línea horizontal que divida la hoja
+            p.line(50, 170, A4[0] - 50, 170)
+
+            label = "Integrante de la Sociedad"
+            p.setFont('Helvetica-Bold', 9)
+            p.drawString(230, 155, label)
+
             label = "Apellido y nombre: "
             p.setFont('Helvetica-Bold', 12)
             p.drawString(50, 135, label)
@@ -345,7 +355,6 @@ class ReempadComercioJuridica(models.Model):
             length = p.stringWidth(label, "Helvetica-Bold", 12)
             p.drawString(80 + length, 135, self.socio1_apellido + " " + self.socio1_nombre + "   DNI: " + self.socio1_dni)
 
-        if self.socio1_caracter is not None:
             label = "Caracter: "
             p.setFont('Helvetica-Bold', 12)
             p.drawString(50, 115, label)
@@ -353,7 +362,6 @@ class ReempadComercioJuridica(models.Model):
             length = p.stringWidth(label, "Helvetica-Bold", 12)
             p.drawString(70 + length, 115, self.socio1_caracter)
 
-        if self.socio1_domicilio is not None:
             label = "Domicilio: "
             p.setFont('Helvetica-Bold', 12)
             p.drawString(230, 115, label)
@@ -361,14 +369,14 @@ class ReempadComercioJuridica(models.Model):
             length = p.stringWidth(label, "Helvetica-Bold", 12)
             p.drawString(310, 115, self.socio1_domicilio)
         
-        # Dibuja una línea horizontal que divida la hoja
-        p.line(50, 100, A4[0] - 50, 100)
-
-        label = "Integrante de la Sociedad"
-        p.setFont('Helvetica-Bold', 9)
-        p.drawString(230, 80, label)
-
         if self.socio2_nombre is not None:
+            # Dibuja una línea horizontal que divida la hoja
+            p.line(50, 100, A4[0] - 50, 100)
+
+            label = "Integrante de la Sociedad"
+            p.setFont('Helvetica-Bold', 9)
+            p.drawString(230, 80, label)
+
             label = "Apellido y nombre: "
             p.setFont('Helvetica-Bold', 12)
             p.drawString(50, 60, label)
@@ -376,7 +384,6 @@ class ReempadComercioJuridica(models.Model):
             length = p.stringWidth(label, "Helvetica-Bold", 12)
             p.drawString(80 + length, 60, self.socio2_apellido + " " + self.socio2_nombre + "   DNI: " + self.socio2_dni)
 
-        if self.socio2_caracter is not None:
             label = "Caracter: "
             p.setFont('Helvetica-Bold', 12)
             p.drawString(50, 40, label)
@@ -384,7 +391,6 @@ class ReempadComercioJuridica(models.Model):
             length = p.stringWidth(label, "Helvetica-Bold", 12)
             p.drawString(70 + length, 40, self.socio2_caracter)
 
-        if self.socio2_domicilio is not None:
             label = "Domicilio: "
             p.setFont('Helvetica-Bold', 12)
             p.drawString(230, 40, label)
@@ -429,15 +435,4 @@ class ReempadComercioJuridica(models.Model):
         # Borra el archivo 'output.pdf'
         os.remove('output.pdf')
 
-    def save(self, *args, **kwargs):
-        # Actualiza el estado
-        if self.id is None:
-            estado = Estado.objects.get(nombre='Pendiente')
-            self.estado = estado
-
-        super().save(*args, **kwargs)
-
-        # Genera el codigo_identificacion después de guardar el objeto
-        if self.codigo_identificacion is None:
-            self.codigo_identificacion = 'RMJ' + str(self.id).zfill(6)
-            super().save(update_fields=['codigo_identificacion'])
+        super().save(update_fields=['codigo_identificacion', 'pdf'])

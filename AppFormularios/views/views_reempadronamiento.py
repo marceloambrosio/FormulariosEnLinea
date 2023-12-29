@@ -3,8 +3,8 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
-from .models import ReempadComercioFisica, ReempadComercioJuridica
-from .forms import ReempadComercioFisicaForm, ReempadComercioJuridicaForm
+from ..models import ReempadComercioFisica, ReempadComercioJuridica
+from ..forms import ReempadComercioFisicaForm, ReempadComercioJuridicaForm
 
 # Create your views here.
 
@@ -54,3 +54,22 @@ class ReempadComercioJuridicaCreateView(CreateView):
 
         # Redirige a la página de éxito y pasa el objeto
         return render(self.request, 'formulario_completado.html', {'object': self.object})
+    
+class ReempadComercioJuridicaUpdateView(UpdateView):
+    model = ReempadComercioJuridica
+    fields = ['estado', 'observaciones']
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            self.object.estado = form.cleaned_data.get('estado')
+            self.object.observaciones = form.cleaned_data.get('observaciones')
+            self.object.finalizado = True
+            self.object.save()
+            return redirect('reempad_comercio_juridica_list')
+        return redirect('reempad_comercio_juridica_list')
+    
+class ReempadComercioJuridicaListView(ListView):
+    model = ReempadComercioJuridica
+    template_name = 'reempad_comercio_juridica_list.html'

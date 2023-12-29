@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+<br>
+  <h2>Reempadronamiento Comercio Jurídica</h2>
+  <br>
+  <table id="resolucionTable" class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col" class="col-1">Código</th>
+        <th scope="col" class="col-1">Fecha</th>
+        <th scope="col" class="col-4">Comercio</th>
+        <th scope="col" class="col-1">CUIT</th>
+        <th scope="col" class="col-2">Estado</th>
+        <th scope="col" class="col-3">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for reempad in object_list %}
+        <tr>
+          <td>{{ reempad.codigo_identificacion }}</td>
+          <td>{{ reempad.fecha|date:"d/m/Y" }}</td>
+          <td>{{ reempad.razonSocial }} ({{ reempad.nombreFantasia }})</td>
+          <td>{{ reempad.cuit }}</td>
+          <td>
+            {% if reempad.estado.nombre == "Pendiente" %}
+              <span class="badge bg-primary rounded-pill">{{ reempad.estado.nombre }}</span>
+            {% elif reempad.estado.nombre == "Cargado" %}
+              <span class="badge bg-success rounded-pill">{{ reempad.estado.nombre }}</span>
+            {% elif reempad.estado.nombre == "Rechazado" or reempad.estado.nombre == "Eliminado" %}
+              <span class="badge bg-danger rounded-pill">{{ reempad.estado.nombre }}</span>
+            {% endif %}
+          </td>          
+          <td>
+            <span data-bs-toggle="tooltip" data-bs-placement="top" title="Inscripción AFIP">
+                <button type="button" class="btn btn-primary" onclick="window.open('{{ reempad.inscripcionAFIP.url }}', '_blank');"><i class="bi bi-file-earmark-text"></i></button>
+            </span>
+            <span data-bs-toggle="tooltip" data-bs-placement="top" title="Reempadronamiento">
+                <button type="button" class="btn btn-success" onclick="window.open('{{ reempad.pdf.url }}', '_blank');"><i class="bi bi-file-earmark-text"></i></button>
+            </span>
+            {% if reempad.finalizado == False %}
+            <span data-bs-toggle="tooltip" data-bs-placement="top" title="Actualizar">
+                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#updateModal{{ reempad.id }}"><i class="bi bi-pencil-square"></i></button>
+            </span>
+            {% elif reempad.finalizado == True %}
+            <span data-bs-toggle="tooltip" data-bs-placement="top" title="Observaciones">
+              <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#observacionesModal{{ reempad.id }}"><i class="bi bi-info-circle"></i></button>
+            </span>
+            {% endif %}
+          </td>
+        </tr>
+        <!-- Inicio Modal Actualizar -->
+        <div class="modal fade" id="updateModal{{ reempad.id }}" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="updateModalLabel">Confirmar actualización</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <form method="post" action="{% url 'reempad_comercio_juridica_update' reempad.id %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                  <p class="text-center">¿Estás seguro de que deseas actualizar el estado de este registro?</p>
+                  <p class="text-danger text-center"><b>¡Una vez actualizado no podrás deshacer la acción!</b></p>
+                  <div class="form-group">
+                    <label for="estado">Estado:</label>
+                    <select id="estado" name="estado" class="form-control">
+                      <option value="2">Cargado</option>
+                      <option value="4">Eliminado</option>
+                      <option value="3">Rechazado</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="observaciones">Observaciones:</label>
+                    <textarea id="observaciones" name="observaciones" class="form-control"></textarea>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                  <button type="submit" class="btn btn-warning">Actualizar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <!-- Fin Modal Actualizar -->
+        <!-- Inicio Modal Observaciones -->
+        <div class="modal fade" id="observacionesModal{{ reempad.id }}" tabindex="-1" aria-labelledby="observacionesModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="observacionesModalLabel">Observaciones</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <p>{{ reempad.observaciones }}</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Fin Modal Observaciones -->
+
+        
+      {% empty %}
+        <tr>
+          <td colspan="4">No hay registros aún.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <script>
+    // Inicializar los tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+  </script>
+  
+  <link rel="stylesheet" href="{% static 'style/jquery.dataTables.min.css' %}">
+  <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+  <script>
+  $(document).ready(function() {
+      var table = $('#resolucionTable').DataTable({
+          "order": [[ 0, "desc" ]],
+          "language": {
+              "url": "//cdn.datatables.net/plug-ins/1.10.22/i18n/Spanish.json",
+              "sLengthMenu": "_MENU_",
+              "sInfo": "<h6 class='float-end'>Total de registros: _TOTAL_</h6>"
+          },
+          "initComplete": function() {
+              // Aplicar clases de Bootstrap al campo de búsqueda
+              $('div.dataTables_filter input').attr('placeholder', 'Buscar..');
+              $('div.dataTables_filter label').contents().filter(function() {
+                  return this.nodeType === 3; // Node.TEXT_NODE
+              }).remove();
+  
+              // Aplicar clases de Bootstrap al select de cantidad de registros a mostrar
+              $('div.dataTables_length label').contents().filter(function() {
+                  return this.nodeType === 3; // Node.TEXT_NODE
+              }).remove();
+              $('div.dataTables_length label').prepend('Registros por página: ');
+  
+              // Aplicar clases de Bootstrap a la paginación
+              $('div.dataTables_paginate').addClass('justify-content-center');
+              $('div.dataTables_paginate a').addClass('btn btn-primary');
+              $('div.dataTables_paginate a').css('margin', '0 2px');
+          },
+          "drawCallback": function() {
+              // Aplicar clases de Bootstrap a la paginación en cada cambio de página
+              $('div.dataTables_paginate a');
+              $('div.dataTables_paginate a').css('margin', '0 2px');
+          }
+      });
+  
+      // Mover el campo de búsqueda y el select de cantidad de registros a la misma fila
+      $('div.dataTables_filter').css('float', 'right');
+      $('div.dataTables_length').css('float', 'left');
+      $('div.dataTables_filter').appendTo('#resolucionTable_length');
+  });
+  </script>
+{% endblock %}
