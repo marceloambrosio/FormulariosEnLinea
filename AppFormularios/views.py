@@ -27,10 +27,16 @@ class ReempadComercioFisicaCreateView(CreateView):
 class ReempadComercioFisicaUpdateView(UpdateView):
     model = ReempadComercioFisica
     fields = ['estado', 'observaciones']
-    success_url = reverse_lazy('reempad_comercio_fisica_list')
 
-    def form_valid(self, form):
-        form.instance.finalizado = True
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            self.object.estado = form.cleaned_data.get('estado')
+            self.object.observaciones = form.cleaned_data.get('observaciones')
+            self.object.finalizado = True
+            self.object.save()
+            return redirect('reempad_comercio_fisica_list')
         return redirect('reempad_comercio_fisica_list')
 
 class ReempadComercioFisicaListView(ListView):

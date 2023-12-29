@@ -6,7 +6,7 @@ class Estado(models.Model):
     nombre = models.CharField(max_length=50)
 
     def __str__(self):
-        return self.nombre
+        return self.nombre + ' (ID: ' + str(self.id) + ')'
 
 @receiver(post_migrate)
 def add_initial_data(sender, **kwargs):
