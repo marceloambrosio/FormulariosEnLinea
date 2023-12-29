@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="container py-5 text-center">
+    <br><br>
+    <h2>✅</h2>
+    <h3>¡Formulario completado con exito!</h3>
+    <hr>
+    <p>Se le enviara una copia del formulario realizado al email registrado.</p>
+    <p>Cuando el formulario sea cargado en sistema, se lo notificara por la misma via.</p>
+    <p>Su código de identificación es: <b>{{ object.codigo_identificacion }}</b></p>
+    <a href="" class="btn btn-success mt-3">Volver</a>
+</div>
+
+{% endblock %}

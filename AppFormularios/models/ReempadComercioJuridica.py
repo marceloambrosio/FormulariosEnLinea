@@ -16,6 +16,7 @@ import io
 
 # Create your models here.
 class ReempadComercioJuridica(models.Model):
+    codigo_identificacion = models.CharField(max_length=20, blank=True, null=True)
     fecha = models.DateField(default=timezone.now, blank=True, null=True)
     estado = models.ForeignKey(Estado, on_delete=models.PROTECT, blank=True, null=True)
     observaciones = models.TextField(blank=True, null=True)
@@ -428,8 +429,15 @@ class ReempadComercioJuridica(models.Model):
         # Borra el archivo 'output.pdf'
         os.remove('output.pdf')
 
+    def save(self, *args, **kwargs):
         # Actualiza el estado
-        estado = Estado.objects.get(nombre='Pendiente')
-        self.estado = estado
+        if self.id is None:
+            estado = Estado.objects.get(nombre='Pendiente')
+            self.estado = estado
 
         super().save(*args, **kwargs)
+
+        # Genera el codigo_identificacion después de guardar el objeto
+        if self.codigo_identificacion is None:
+            self.codigo_identificacion = 'RMJ' + str(self.id).zfill(6)
+            super().save(update_fields=['codigo_identificacion'])

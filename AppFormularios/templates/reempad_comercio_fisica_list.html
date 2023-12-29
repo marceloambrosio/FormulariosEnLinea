@@ -9,16 +9,18 @@
   <table id="resolucionTable" class="table table-hover">
     <thead>
       <tr>
+        <th scope="col" class="col-1">Código</th>
         <th scope="col" class="col-1">Fecha</th>
         <th scope="col" class="col-4">Comercio</th>
         <th scope="col" class="col-1">CUIT</th>
         <th scope="col" class="col-2">Estado</th>
-        <th scope="col" class="col-4">Acciones</th>
+        <th scope="col" class="col-3">Acciones</th>
       </tr>
     </thead>
     <tbody>
       {% for reempad in object_list %}
         <tr>
+          <td>{{ reempad.codigo_identificacion }}</td>
           <td>{{ reempad.fecha|date:"d/m/Y" }}</td>
           <td>{{ reempad.apellido }} {{ reempad.nombre }} ({{ reempad.nombreFantasia }})</td>
           <td>{{ reempad.cuit }}</td>
