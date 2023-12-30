@@ -5,6 +5,7 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 from ..models import ReempadComercioFisica, ReempadComercioJuridica
 from ..forms import ReempadComercioFisicaForm, ReempadComercioJuridicaForm
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 # Create your views here.
 
@@ -24,9 +25,10 @@ class ReempadComercioFisicaCreateView(CreateView):
         # Redirige a la página de éxito y pasa el objeto
         return render(self.request, 'formulario_completado.html', {'object': self.object})
 
-class ReempadComercioFisicaUpdateView(UpdateView):
+class ReempadComercioFisicaUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = ReempadComercioFisica
     fields = ['estado', 'observaciones']
+    permission_required = 'AppFormularios.change_ReempadComercioFisica'
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -39,9 +41,10 @@ class ReempadComercioFisicaUpdateView(UpdateView):
             return redirect('reempad_comercio_fisica_list')
         return redirect('reempad_comercio_fisica_list')
 
-class ReempadComercioFisicaListView(ListView):
+class ReempadComercioFisicaListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = ReempadComercioFisica
     template_name = 'reempadronamiento/reempad_comercio_fisica_list.html'
+    permission_required = 'AppFormularios.view_ReempadComercioFisica'
 
 class ReempadComercioJuridicaCreateView(CreateView):
     model = ReempadComercioJuridica
@@ -55,9 +58,10 @@ class ReempadComercioJuridicaCreateView(CreateView):
         # Redirige a la página de éxito y pasa el objeto
         return render(self.request, 'formulario_completado.html', {'object': self.object})
     
-class ReempadComercioJuridicaUpdateView(UpdateView):
+class ReempadComercioJuridicaUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = ReempadComercioJuridica
     fields = ['estado', 'observaciones']
+    permission_required = 'AppFormularios.change_ReempadComercioJuridica'
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -70,6 +74,7 @@ class ReempadComercioJuridicaUpdateView(UpdateView):
             return redirect('reempad_comercio_juridica_list')
         return redirect('reempad_comercio_juridica_list')
     
-class ReempadComercioJuridicaListView(ListView):
+class ReempadComercioJuridicaListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = ReempadComercioJuridica
     template_name = 'reempadronamiento/reempad_comercio_juridica_list.html'
+    permission_required = 'AppFormularios.view_ReempadComercioJuridica'

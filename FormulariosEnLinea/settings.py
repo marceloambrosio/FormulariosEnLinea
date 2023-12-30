@@ -135,3 +135,22 @@ MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#LOGIN
+LOGIN_REDIRECT_URL = '/home'
+
+LOGIN_URL = '/login/'
+
+LOGIN_TEMPLATE = '/registration/login.html'
+
+LOGOUT_REDIRECT_URL = '/login'
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
+SESSION_COOKIE_AGE = None
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+SESSION_COOKIE_AGE = 1800  # La sesión expira después de 30 minutos
+
+SESSION_SAVE_EVERY_REQUEST = True  # Actualiza la cookie de sesión en cada solicitud

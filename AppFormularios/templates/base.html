@@ -26,9 +26,30 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
+            {% if perms.AppFormularios.view_ReempadComercioFisica or perms.AppFormularios.view_ReempadComercioJuridica %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Formularios
+          </a>
+          <ul class="dropdown-menu">
+            {% if perms.AppFormularios.view_ReempadComercioFisica %}
+            <li><a class="dropdown-item" href="{% url 'reempad_comercio_fisica_list' %}">Reempad Comercio Fisica</a></li>
+            {% endif %}
+            <hr>
+            {% if perms.AppFormularios.view_ReempadComercioJuridica %}
+            <li><a class="dropdown-item" href="{% url 'reempad_comercio_juridica_list' %}">Reempad Comercio Juridica</a></li>
+            {% endif %}
+          </ul>
+        </li>
+        {% endif %}
           </li>
         </ul>
       </div>
+      {% if request.user.is_authenticated %}
+          <form class="d-flex">
+              <a class="btn btn-light" href="{% url 'logout' %}">Cerrar Sesión</a>
+          </form>
+      {% endif %}
     </div>
   </nav>
 
