@@ -26,11 +26,11 @@
                 <br>
                 <div class="row">
                     <div class="col-4">
-                        <h6>CUIT (*)</h6>
+                        <h6>CUIT (*) (Sin guiones y sin espacios)</h6>
                         {{ form.cuit }}
                     </div>
                     <div class="col-4">
-                        <h6>Ing. Brutos (*)</h6>
+                        <h6>Ing. Brutos (*) (Sin guiones y sin espacios)</h6>
                         {{ form.ingresosBrutos }}
                     </div>
                     <div class="col-4">
@@ -102,7 +102,7 @@
                         {{ form.superficieLocal }}
                     </div>
                     <div class="col-3">
-                        <h6>Superficie del depositivo (si posee)</h6>
+                        <h6>Superficie del deposito (si posee)</h6>
                         {{ form.superficieDeposito }}
                     </div>
                     <div class="col-1">
@@ -120,9 +120,14 @@
                         <h6>Inscripcion AFIP (en PDF) (*)</h6>
                         {{ form.inscripcionAFIP }}
                     </div>
+                    <div class="col-7">
+                        <h6>Ingrese los datos de la imagen (*)</h6>
+                        {{ form.captcha }}
+                        {{ form.captcha.errors }}
+                    </div>
                 </div>
             </div>
-            <button class="btn btn-primary float-end" type="submit">Guardar</button>
+            <button class="btn btn-primary float-end" type="submit">Enviar</button>
         </form>
     </div>
 </div>

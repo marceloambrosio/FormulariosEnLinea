@@ -102,7 +102,7 @@
                         {{ form.superficieLocal }}
                     </div>
                     <div class="col-3">
-                        <h6>Superficie del depositivo (si posee)</h6>
+                        <h6>Superficie del deposito (si posee)</h6>
                         {{ form.superficieDeposito }}
                     </div>
                     <div class="col-1">
@@ -112,6 +112,7 @@
                     <div class="col-5">
                         <h6>Domicilio de Sucursal (si posee)</h6>
                         {{ form.domicilioSucursal }}
+                        {{ form.captcha.errors }}
                     </div>
                 </div>
                 <br>
@@ -202,9 +203,13 @@
                         <h6>Inscripcion AFIP (en PDF) (*)</h6>
                         {{ form.inscripcionAFIP }}
                     </div>
+                    <div class="col-7">
+                        <h6>Ingrese los datos de la imagen (*)</h6>
+                        {{ form.captcha }}
+                    </div>
                 </div>
             </div>
-            <button class="btn btn-primary float-end" type="submit">Guardar</button>
+            <button class="btn btn-primary float-end" type="submit">Enviar</button>
         </form>
     </div>
 </div>

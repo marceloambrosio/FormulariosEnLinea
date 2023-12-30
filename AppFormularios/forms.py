@@ -1,11 +1,14 @@
 from django import forms
 from .models import ReempadComercioFisica, ReempadComercioJuridica
 from django.forms import TextInput, NumberInput, EmailInput, FileInput, Select
+from captcha.fields import CaptchaField
 
 class ReempadComercioFisicaForm(forms.ModelForm):
+    captcha = CaptchaField()
+
     class Meta:
         model = ReempadComercioFisica
-        fields = ['nombre', 'apellido', 'nombreFantasia', 'cuit', 'ingresosBrutos', 'convenioMultilateral', 'domicilioFiscal', 'localidad', 'codigoPostal', 'provincia', 'domicilioComercial', 'email', 'telefonoComercial', 'telefonoTitular', 'superficieLocal', 'superficieDeposito', 'actividadPrincipal', 'rubro2', 'rubro3', 'rubro4', 'sucursal', 'domicilioSucursal', 'inscripcionAFIP']
+        fields = ['nombre', 'apellido', 'nombreFantasia', 'cuit', 'ingresosBrutos', 'convenioMultilateral', 'domicilioFiscal', 'localidad', 'codigoPostal', 'provincia', 'domicilioComercial', 'email', 'telefonoComercial', 'telefonoTitular', 'superficieLocal', 'superficieDeposito', 'actividadPrincipal', 'rubro2', 'rubro3', 'rubro4', 'sucursal', 'domicilioSucursal', 'inscripcionAFIP', 'captcha']
         exclude = ['fecha', 'estado']
         widgets = {
             'nombre': TextInput(attrs={'class': 'form-control'}),
@@ -31,12 +34,15 @@ class ReempadComercioFisicaForm(forms.ModelForm):
             'sucursal': Select(choices=[(False, 'No'), (True, 'Sí')], attrs={'class': 'form-control'}),
             'domicilioSucursal': TextInput(attrs={'class': 'form-control'}),
             'inscripcionAFIP': FileInput(attrs={'class': 'form-control', 'accept': '.pdf'}),
+            'captcha' : CaptchaField()
         }
 
 class ReempadComercioJuridicaForm(forms.ModelForm):
+    captcha = CaptchaField()
+
     class Meta:
         model = ReempadComercioJuridica
-        fields = ['razonSocial', 'nombreFantasia', 'caracter', 'cuit', 'ingresosBrutos', 'convenioMultilateral', 'irpc_numero', 'irpc_folio', 'irpc_libro', 'irpc_tema', 'irpc_anio', 'domicilioFiscal', 'localidad', 'codigoPostal', 'provincia', 'domicilioComercial', 'email', 'telefonoComercial', 'telefonoTitular', 'superficieLocal', 'superficieDeposito', 'actividadPrincipal', 'rubro2', 'rubro3', 'rubro4', 'sucursal', 'domicilioSucursal', 'socio1_nombre', 'socio1_apellido', 'socio1_dni', 'socio1_domicilio', 'socio1_caracter', 'socio2_nombre', 'socio2_apellido', 'socio2_dni', 'socio2_domicilio', 'socio2_caracter', 'inscripcionAFIP']
+        fields = ['razonSocial', 'nombreFantasia', 'caracter', 'cuit', 'ingresosBrutos', 'convenioMultilateral', 'irpc_numero', 'irpc_folio', 'irpc_libro', 'irpc_tema', 'irpc_anio', 'domicilioFiscal', 'localidad', 'codigoPostal', 'provincia', 'domicilioComercial', 'email', 'telefonoComercial', 'telefonoTitular', 'superficieLocal', 'superficieDeposito', 'actividadPrincipal', 'rubro2', 'rubro3', 'rubro4', 'sucursal', 'domicilioSucursal', 'socio1_nombre', 'socio1_apellido', 'socio1_dni', 'socio1_domicilio', 'socio1_caracter', 'socio2_nombre', 'socio2_apellido', 'socio2_dni', 'socio2_domicilio', 'socio2_caracter', 'inscripcionAFIP', 'captcha']
         exclude = ['fecha', 'estado']
         widgets = {
             'razonSocial': TextInput(attrs={'class': 'form-control'}),
@@ -77,4 +83,5 @@ class ReempadComercioJuridicaForm(forms.ModelForm):
             'socio2_domicilio': TextInput(attrs={'class': 'form-control'}),
             'socio2_caracter': Select(choices=[('Socio Gerente', 'Socio Gerente'), ('Responsable', 'Responsable'), ('Administrador', 'Administrador'), ('Otro', 'Otro')], attrs={'class': 'form-control'}),
             'inscripcionAFIP': FileInput(attrs={'class': 'form-control', 'accept': '.pdf'}),
+            'captcha' : CaptchaField()
         }
