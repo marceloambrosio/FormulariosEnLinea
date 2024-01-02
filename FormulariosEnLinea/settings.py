@@ -23,6 +23,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-rm99ezgfhn21u6%u6@cy#dcocy5!g9-$=$*2h^1!n^-kd6id-8'
 
+CSRF_TRUSTED_ORIGINS = ['https://formularios.villanueva.gob.ar','https://*.127.0.0.1']
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -154,3 +156,10 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_AGE = 1800  # La sesión expira después de 30 minutos
 
 SESSION_SAVE_EVERY_REQUEST = True  # Actualiza la cookie de sesión en cada solicitud
+
+
+#EMAIL
+EMAIL_HOST = 'el000336.ferozo.com'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'formularios@villanueva.gob.ar'
+EMAIL_HOST_PASSWORD = 'Mvil0858*'
